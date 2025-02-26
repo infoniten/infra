@@ -27,12 +27,12 @@ if [ -z "$JENKINS_PASSWORD" ]; then
     echo "docker exec jenkins-master cat /var/jenkins_home/secrets/initialAdminPassword"
 else
     echo -e "${GREEN}✓ Начальный пароль администратора: $JENKINS_PASSWORD${NC}"
-    echo "Используйте этот пароль для первоначальной настройки Jenkins по адресу http://localhost:8080/jenkins"
+    echo "Используйте этот пароль для первоначальной настройки Jenkins по адресу http://localhost:8081/jenkins"
 fi
 
 # Инструкции по настройке слейвов
 echo -e "\n=== Инструкции по настройке слейвов ==="
-echo "1. Войдите в Jenkins по адресу http://localhost:8080/jenkins"
+echo "1. Войдите в Jenkins по адресу http://localhost:8081/jenkins"
 echo "2. Перейдите в 'Manage Jenkins' -> 'Manage Nodes and Clouds'"
 echo "3. Нажмите 'New Node' и создайте два новых узла:"
 echo "   - Имя: omega-agent"

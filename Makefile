@@ -1,4 +1,4 @@
-.PHONY: up down status clean logs help install-istio test-connectivity deploy-test-app setup-istio-multicluster setup-kafka-replication
+.PHONY: up down status clean logs help install-istio test-connectivity deploy-test-app setup-istio-multicluster setup-kafka-replication jenkins-up jenkins-setup jenkins-agents-setup
 
 help:
 	@echo "Доступные команды:"
@@ -10,6 +10,9 @@ help:
 	@echo "  make omega-up - Поднять только сегмент omega"
 	@echo "  make psi-up  - Поднять только сегмент psi"
 	@echo "  make proxy-up - Поднять только прокси-сервис"
+	@echo "  make jenkins-up - Поднять только Jenkins и его слейвы"
+	@echo "  make jenkins-setup - Настроить Jenkins и получить начальный пароль"
+	@echo "  make jenkins-agents-setup - Настроить и запустить агенты Jenkins"
 	@echo "  make install-istio - Установить Istio в оба кластера Kubernetes"
 	@echo "  make test-connectivity - Протестировать связь между сегментами"
 	@echo "  make deploy-test-app - Развернуть тестовое приложение в обоих кластерах"
@@ -47,6 +50,18 @@ psi-up:
 proxy-up:
 	@echo "Поднимаем прокси-сервис..."
 	docker-compose -f docker-compose.yaml up -d proxy
+
+jenkins-up:
+	@echo "Поднимаем Jenkins и его слейвы..."
+	docker-compose -f docker-compose.yaml up -d jenkins-master jenkins-slave-omega jenkins-slave-psi
+
+jenkins-setup:
+	@echo "Настраиваем Jenkins и получаем начальный пароль..."
+	./scripts/setup_jenkins.sh
+
+jenkins-agents-setup:
+	@echo "Настраиваем и запускаем агенты Jenkins..."
+	./scripts/jenkins_agents_setup.sh
 
 install-istio:
 	@echo "Устанавливаем Istio в кластеры Kubernetes..."
