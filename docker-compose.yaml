@@ -1,0 +1,267 @@
+version: '3.8'
+
+networks:
+  omega-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.28.0.0/16
+  psi-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.29.0.0/16
+  proxy-network:
+    driver: bridge
+  jenkins-network:
+    driver: bridge
+
+services:
+  # Jenkins мастер
+  jenkins-master:
+    image: jenkins/jenkins:lts
+    container_name: jenkins-master
+    ports:
+      - "8080:8080"
+      - "50000:50000"
+    volumes:
+      - ./data/jenkins/master:/var/jenkins_home
+    networks:
+      - jenkins-network
+      - proxy-network
+    environment:
+      - JENKINS_OPTS="--prefix=/jenkins"
+    restart: unless-stopped
+
+  # Jenkins слейв для сегмента Omega
+  jenkins-slave-omega:
+    image: jenkins/jnlp-slave:latest
+    container_name: jenkins-slave-omega
+    volumes:
+      - ./data/jenkins/slave-omega:/home/jenkins/agent
+    networks:
+      - jenkins-network
+      - omega-network
+    environment:
+      - JENKINS_URL=http://jenkins-master:8080
+      - JENKINS_AGENT_NAME=omega-agent
+    restart: unless-stopped
+    depends_on:
+      - jenkins-master
+
+  # Jenkins слейв для сегмента Psi
+  jenkins-slave-psi:
+    image: jenkins/jnlp-slave:latest
+    container_name: jenkins-slave-psi
+    volumes:
+      - ./data/jenkins/slave-psi:/home/jenkins/agent
+    networks:
+      - jenkins-network
+      - psi-network
+    environment:
+      - JENKINS_URL=http://jenkins-master:8080
+      - JENKINS_AGENT_NAME=psi-agent
+    restart: unless-stopped
+    depends_on:
+      - jenkins-master
+
+  # Прокси-сервис для связи между сегментами
+  proxy:
+    image: openresty/openresty:alpine
+    container_name: proxy
+    ports:
+      - "8080:80"
+      - "8443:443"
+    volumes:
+      - ./config/nginx/nginx.conf:/usr/local/openresty/nginx/conf/nginx.conf
+      - ./config/nginx/conf.d:/usr/local/openresty/nginx/conf/conf.d
+      - ./logs/nginx:/usr/local/openresty/nginx/logs
+    networks:
+      - omega-network
+      - psi-network
+      - proxy-network
+      - jenkins-network
+    depends_on:
+      - omega-k8s
+      - psi-k8s
+    restart: unless-stopped
+
+  # Сегмент Omega
+  omega-k8s:
+    image: rancher/k3s:latest
+    container_name: omega-k8s
+    command: server --disable traefik
+    privileged: true
+    environment:
+      - K3S_KUBECONFIG_OUTPUT=/output/kubeconfig.yaml
+      - K3S_KUBECONFIG_MODE=666
+    volumes:
+      - ./data/omega/k8s:/var/lib/rancher/k3s
+      - ./config/omega/k8s:/output
+    ports:
+      - "6443:6443"
+    networks:
+      - omega-network
+    restart: unless-stopped
+
+  omega-kafka:
+    image: bitnami/kafka:latest
+    container_name: omega-kafka
+    environment:
+      - KAFKA_CFG_ZOOKEEPER_CONNECT=omega-zookeeper:2181
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://omega-kafka:9092
+      - ALLOW_PLAINTEXT_LISTENER=yes
+    ports:
+      - "9092:9092"
+    networks:
+      - omega-network
+    depends_on:
+      - omega-zookeeper
+    restart: unless-stopped
+
+  omega-zookeeper:
+    image: bitnami/zookeeper:latest
+    container_name: omega-zookeeper
+    environment:
+      - ALLOW_ANONYMOUS_LOGIN=yes
+    ports:
+      - "2181:2181"
+    networks:
+      - omega-network
+    restart: unless-stopped
+
+  omega-opensearch:
+    image: opensearchproject/opensearch:latest
+    container_name: omega-opensearch
+    environment:
+      - discovery.type=single-node
+      - bootstrap.memory_lock=true
+      - "OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m"
+      - "DISABLE_SECURITY_PLUGIN=true"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - ./data/omega/opensearch:/usr/share/opensearch/data
+    ports:
+      - "9200:9200"
+      - "9600:9600"
+    networks:
+      - omega-network
+    restart: unless-stopped
+
+  omega-monitoring:
+    image: prom/prometheus:latest
+    container_name: omega-monitoring
+    volumes:
+      - ./config/omega/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./data/omega/prometheus:/prometheus
+    ports:
+      - "9090:9090"
+    networks:
+      - omega-network
+    restart: unless-stopped
+
+  omega-grafana:
+    image: grafana/grafana:latest
+    container_name: omega-grafana
+    volumes:
+      - ./data/omega/grafana:/var/lib/grafana
+    ports:
+      - "3000:3000"
+    networks:
+      - omega-network
+    depends_on:
+      - omega-monitoring
+    restart: unless-stopped
+
+  # Сегмент Psi
+  psi-k8s:
+    image: rancher/k3s:latest
+    container_name: psi-k8s
+    command: server --disable traefik
+    privileged: true
+    environment:
+      - K3S_KUBECONFIG_OUTPUT=/output/kubeconfig.yaml
+      - K3S_KUBECONFIG_MODE=666
+    volumes:
+      - ./data/psi/k8s:/var/lib/rancher/k3s
+      - ./config/psi/k8s:/output
+    ports:
+      - "6445:6443"
+    networks:
+      - psi-network
+    restart: unless-stopped
+
+  psi-kafka:
+    image: bitnami/kafka:latest
+    container_name: psi-kafka
+    environment:
+      - KAFKA_CFG_ZOOKEEPER_CONNECT=psi-zookeeper:2181
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://psi-kafka:9092
+      - ALLOW_PLAINTEXT_LISTENER=yes
+    ports:
+      - "9093:9092"
+    networks:
+      - psi-network
+    depends_on:
+      - psi-zookeeper
+    restart: unless-stopped
+
+  psi-zookeeper:
+    image: bitnami/zookeeper:latest
+    container_name: psi-zookeeper
+    environment:
+      - ALLOW_ANONYMOUS_LOGIN=yes
+    ports:
+      - "2182:2181"
+    networks:
+      - psi-network
+    restart: unless-stopped
+
+  psi-opensearch:
+    image: opensearchproject/opensearch:latest
+    container_name: psi-opensearch
+    environment:
+      - discovery.type=single-node
+      - bootstrap.memory_lock=true
+      - "OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m"
+      - "DISABLE_SECURITY_PLUGIN=true"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - ./data/psi/opensearch:/usr/share/opensearch/data
+    ports:
+      - "9201:9200"
+      - "9601:9600"
+    networks:
+      - psi-network
+    restart: unless-stopped
+
+  psi-monitoring:
+    image: prom/prometheus:latest
+    container_name: psi-monitoring
+    volumes:
+      - ./config/psi/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./data/psi/prometheus:/prometheus
+    ports:
+      - "9091:9090"
+    networks:
+      - psi-network
+    restart: unless-stopped
+
+  psi-grafana:
+    image: grafana/grafana:latest
+    container_name: psi-grafana
+    volumes:
+      - ./data/psi/grafana:/var/lib/grafana
+    ports:
+      - "3001:3000"
+    networks:
+      - psi-network
+    depends_on:
+      - psi-monitoring
+    restart: unless-stopped 

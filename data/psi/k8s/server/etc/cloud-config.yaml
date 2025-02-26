@@ -1,0 +1,1 @@
+{"lbDefaultPriorityClassName":"system-node-critical","lbEnabled":true,"lbImage":"rancher/klipper-lb:v0.4.9","lbNamespace":"kube-system","nodeEnabled":true,"rootless":false}

@@ -1,0 +1,104 @@
+2025/02/26 14:30:54 [error] 10#10: *7 lua entry thread aborted: runtime error: rewrite_by_lua(conf.d/proxy.conf:57):2: module 'xml2lua' not found:
+	no field package.preload['xml2lua']
+	no file '/usr/local/openresty/site/lualib/xml2lua.ljbc'
+	no file '/usr/local/openresty/site/lualib/xml2lua/init.ljbc'
+	no file '/usr/local/openresty/lualib/xml2lua.ljbc'
+	no file '/usr/local/openresty/lualib/xml2lua/init.ljbc'
+	no file '/usr/local/openresty/site/lualib/xml2lua.lua'
+	no file '/usr/local/openresty/site/lualib/xml2lua/init.lua'
+	no file '/usr/local/openresty/lualib/xml2lua.lua'
+	no file '/usr/local/openresty/lualib/xml2lua/init.lua'
+	no file './xml2lua.lua'
+	no file '/usr/local/openresty/luajit/share/luajit-2.1/xml2lua.lua'
+	no file '/usr/local/share/lua/5.1/xml2lua.lua'
+	no file '/usr/local/share/lua/5.1/xml2lua/init.lua'
+	no file '/usr/local/openresty/luajit/share/lua/5.1/xml2lua.lua'
+	no file '/usr/local/openresty/luajit/share/lua/5.1/xml2lua/init.lua'
+	no file '/usr/local/openresty/site/lualib/xml2lua.so'
+	no file '/usr/local/openresty/lualib/xml2lua.so'
+	no file './xml2lua.so'
+	no file '/usr/local/lib/lua/5.1/xml2lua.so'
+	no file '/usr/local/openresty/luajit/lib/lua/5.1/xml2lua.so'
+	no file '/usr/local/lib/lua/5.1/loadall.so'
+stack traceback:
+coroutine 0:
+	[C]: in function 'require'
+	rewrite_by_lua(conf.d/proxy.conf:57):2: in main chunk, client: 172.28.0.1, server: omega-to-psi.local, request: "POST / HTTP/1.1", host: "omega-to-psi.local"
+2025/02/26 14:30:54 [error] 12#12: *8 lua entry thread aborted: runtime error: rewrite_by_lua(conf.d/proxy.conf:57):2: module 'xml2lua' not found:
+	no field package.preload['xml2lua']
+	no file '/usr/local/openresty/site/lualib/xml2lua.ljbc'
+	no file '/usr/local/openresty/site/lualib/xml2lua/init.ljbc'
+	no file '/usr/local/openresty/lualib/xml2lua.ljbc'
+	no file '/usr/local/openresty/lualib/xml2lua/init.ljbc'
+	no file '/usr/local/openresty/site/lualib/xml2lua.lua'
+	no file '/usr/local/openresty/site/lualib/xml2lua/init.lua'
+	no file '/usr/local/openresty/lualib/xml2lua.lua'
+	no file '/usr/local/openresty/lualib/xml2lua/init.lua'
+	no file './xml2lua.lua'
+	no file '/usr/local/openresty/luajit/share/luajit-2.1/xml2lua.lua'
+	no file '/usr/local/share/lua/5.1/xml2lua.lua'
+	no file '/usr/local/share/lua/5.1/xml2lua/init.lua'
+	no file '/usr/local/openresty/luajit/share/lua/5.1/xml2lua.lua'
+	no file '/usr/local/openresty/luajit/share/lua/5.1/xml2lua/init.lua'
+	no file '/usr/local/openresty/site/lualib/xml2lua.so'
+	no file '/usr/local/openresty/lualib/xml2lua.so'
+	no file './xml2lua.so'
+	no file '/usr/local/lib/lua/5.1/xml2lua.so'
+	no file '/usr/local/openresty/luajit/lib/lua/5.1/xml2lua.so'
+	no file '/usr/local/lib/lua/5.1/loadall.so'
+stack traceback:
+coroutine 0:
+	[C]: in function 'require'
+	rewrite_by_lua(conf.d/proxy.conf:57):2: in main chunk, client: 172.28.0.1, server: omega-to-psi.local, request: "POST / HTTP/1.1", host: "omega-to-psi.local"
+2025/02/26 14:31:41 [error] 10#10: *5 lua entry thread aborted: runtime error: rewrite_by_lua(conf.d/proxy.conf:57):2: module 'xml2lua' not found:
+	no field package.preload['xml2lua']
+	no file '/usr/local/openresty/site/lualib/xml2lua.ljbc'
+	no file '/usr/local/openresty/site/lualib/xml2lua/init.ljbc'
+	no file '/usr/local/openresty/lualib/xml2lua.ljbc'
+	no file '/usr/local/openresty/lualib/xml2lua/init.ljbc'
+	no file '/usr/local/openresty/site/lualib/xml2lua.lua'
+	no file '/usr/local/openresty/site/lualib/xml2lua/init.lua'
+	no file '/usr/local/openresty/lualib/xml2lua.lua'
+	no file '/usr/local/openresty/lualib/xml2lua/init.lua'
+	no file './xml2lua.lua'
+	no file '/usr/local/openresty/luajit/share/luajit-2.1/xml2lua.lua'
+	no file '/usr/local/share/lua/5.1/xml2lua.lua'
+	no file '/usr/local/share/lua/5.1/xml2lua/init.lua'
+	no file '/usr/local/openresty/luajit/share/lua/5.1/xml2lua.lua'
+	no file '/usr/local/openresty/luajit/share/lua/5.1/xml2lua/init.lua'
+	no file '/usr/local/openresty/site/lualib/xml2lua.so'
+	no file '/usr/local/openresty/lualib/xml2lua.so'
+	no file './xml2lua.so'
+	no file '/usr/local/lib/lua/5.1/xml2lua.so'
+	no file '/usr/local/openresty/luajit/lib/lua/5.1/xml2lua.so'
+	no file '/usr/local/lib/lua/5.1/loadall.so'
+stack traceback:
+coroutine 0:
+	[C]: in function 'require'
+	rewrite_by_lua(conf.d/proxy.conf:57):2: in main chunk, client: 172.28.0.1, server: omega-to-psi.local, request: "POST / HTTP/1.1", host: "omega-to-psi.local"
+2025/02/26 14:31:41 [error] 12#12: *6 lua entry thread aborted: runtime error: rewrite_by_lua(conf.d/proxy.conf:57):2: module 'xml2lua' not found:
+	no field package.preload['xml2lua']
+	no file '/usr/local/openresty/site/lualib/xml2lua.ljbc'
+	no file '/usr/local/openresty/site/lualib/xml2lua/init.ljbc'
+	no file '/usr/local/openresty/lualib/xml2lua.ljbc'
+	no file '/usr/local/openresty/lualib/xml2lua/init.ljbc'
+	no file '/usr/local/openresty/site/lualib/xml2lua.lua'
+	no file '/usr/local/openresty/site/lualib/xml2lua/init.lua'
+	no file '/usr/local/openresty/lualib/xml2lua.lua'
+	no file '/usr/local/openresty/lualib/xml2lua/init.lua'
+	no file './xml2lua.lua'
+	no file '/usr/local/openresty/luajit/share/luajit-2.1/xml2lua.lua'
+	no file '/usr/local/share/lua/5.1/xml2lua.lua'
+	no file '/usr/local/share/lua/5.1/xml2lua/init.lua'
+	no file '/usr/local/openresty/luajit/share/lua/5.1/xml2lua.lua'
+	no file '/usr/local/openresty/luajit/share/lua/5.1/xml2lua/init.lua'
+	no file '/usr/local/openresty/site/lualib/xml2lua.so'
+	no file '/usr/local/openresty/lualib/xml2lua.so'
+	no file './xml2lua.so'
+	no file '/usr/local/lib/lua/5.1/xml2lua.so'
+	no file '/usr/local/openresty/luajit/lib/lua/5.1/xml2lua.so'
+	no file '/usr/local/lib/lua/5.1/loadall.so'
+stack traceback:
+coroutine 0:
+	[C]: in function 'require'
+	rewrite_by_lua(conf.d/proxy.conf:57):2: in main chunk, client: 172.28.0.1, server: omega-to-psi.local, request: "POST / HTTP/1.1", host: "omega-to-psi.local"
